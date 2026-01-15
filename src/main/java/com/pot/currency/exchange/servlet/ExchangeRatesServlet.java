@@ -59,6 +59,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             ValidationUtil.validateParams(baseCurrencyCode, targetCurrencyCode, rateParam);
             ValidationUtil.validateCurrencyCode(baseCurrencyCode);
             ValidationUtil.validateCurrencyCode(targetCurrencyCode);
+            ValidationUtil.validateCurrencyCodePair(baseCurrencyCode, targetCurrencyCode);
             BigDecimal rate = new BigDecimal(rateParam).setScale(6, RoundingMode.HALF_EVEN);
             ValidationUtil.validateDecimal(rate);
 

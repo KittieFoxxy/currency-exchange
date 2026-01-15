@@ -46,4 +46,11 @@ public class ValidationUtil {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static void validateCurrencyCodePair(String baseCurrencyCode, String targetCurrencyCode) {
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            String message = "Code pairs are the same.";
+            throw new IllegalArgumentException(message);
+        }
+    }
 }
