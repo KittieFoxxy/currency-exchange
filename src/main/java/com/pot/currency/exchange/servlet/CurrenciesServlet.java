@@ -49,8 +49,10 @@ public class CurrenciesServlet extends HttpServlet {
         String sign = req.getParameter("sign");
         try {
             ValidationUtil.validateParams(name, code, sign);
+            ValidationUtil.validateCurrencyName(name);
             ValidationUtil.validateCurrencyCode(code);
-            Currency newCurrency = new Currency(name, code, sign);
+            ValidationUtil.validateCurrencySign(sign);
+            Currency newCurrency = new Currency(code, name, sign);
             Currency response = currencyService.add(newCurrency);
             CurrencyResponse currencyResponse = mapper.toResponse(response);
             ResponseUtil.sendResponse(resp, HttpServletResponse.SC_CREATED, currencyResponse);

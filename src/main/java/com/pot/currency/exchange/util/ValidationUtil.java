@@ -14,7 +14,7 @@ public class ValidationUtil {
     }
 
     public static void validateCurrencyCode(String code) throws IllegalArgumentException {
-        if (code == null || code.length() != 3) {
+        if (code.length() != 3) {
             String message = "Code must be 3 characters long.";
             throw new IllegalArgumentException(message);
         }
@@ -30,6 +30,20 @@ public class ValidationUtil {
     public static void validateCodePair(String codePair) {
         if (codePair.length() != 6) {
             throw new IllegalArgumentException("Code pair must be 6 characters long.");
+        }
+    }
+
+    public static void validateCurrencySign(String sign) {
+        if (sign.length() > 3) {
+            String message = "Sign can not be greater 3 characters long.";
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void validateCurrencyName(String name) {
+        if (name.length() > 15) {
+            String message = "Name is very long.";
+            throw new IllegalArgumentException(message);
         }
     }
 }
