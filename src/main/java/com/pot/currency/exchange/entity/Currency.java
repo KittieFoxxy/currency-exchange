@@ -20,14 +20,14 @@ public class Currency {
     }
 
     public Currency(String code, String fullName, String sign) {
-        new Currency(null, code, fullName, sign);
+        this(null, code, fullName, sign);
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String code() {
+    public String getCode() {
         return code;
     }
 
@@ -35,11 +35,11 @@ public class Currency {
         this.code = code;
     }
 
-    public String name() {
+    public String getFullName() {
         return fullName;
     }
 
-    public String sign() {
+    public String getSign() {
         return sign;
     }
 

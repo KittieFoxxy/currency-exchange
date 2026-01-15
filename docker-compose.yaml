@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: currency-exchange-container
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./currency.db:/usr/local/tomcat/currency.db
+    environment:
+      - DB_PATH=/usr/local/tomcat/currency.db
+    restart: always

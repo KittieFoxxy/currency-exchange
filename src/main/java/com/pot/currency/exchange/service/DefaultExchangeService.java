@@ -21,11 +21,11 @@ class DefaultExchangeService implements ExchangeService {
     public ConvertResponse exchange(String from, String to, BigDecimal amount) {
         ExchangeRate rate = findExchangeRate(from, to)
                 .orElseThrow(() -> new ExchangeRateNotFoundException("Exchange rate not found for " + from + "-" + to));
-        BigDecimal convertedAmount = amount.multiply(rate.rate()).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal convertedAmount = amount.multiply(rate.getRate()).setScale(2, RoundingMode.HALF_EVEN);
         return new ConvertResponse(
-                rate.baseCurrency(),
-                rate.targetCurrency(),
-                rate.rate(),
+                rate.getBaseCurrency(),
+                rate.getTargetCurrency(),
+                rate.getRate(),
                 amount,
                 convertedAmount
         );
@@ -39,8 +39,8 @@ class DefaultExchangeService implements ExchangeService {
         // Обратный курс
         Optional<ExchangeRate> reverse = repository.findByCodePair(to, from);
         if (reverse.isPresent()) {
-            BigDecimal rate = BigDecimal.ONE.divide(reverse.get().rate(), 6, RoundingMode.HALF_EVEN);
-            return Optional.of(new ExchangeRate(null, reverse.get().targetCurrency(), reverse.get().baseCurrency(), rate));
+            BigDecimal rate = BigDecimal.ONE.divide(reverse.get().getRate(), 6, RoundingMode.HALF_EVEN);
+            return Optional.of(new ExchangeRate(null, reverse.get().getTargetCurrency(), reverse.get().getBaseCurrency(), rate));
         }
 
         // Кросс-курс через USD
@@ -52,8 +52,8 @@ class DefaultExchangeService implements ExchangeService {
         Optional<ExchangeRate> usdToTarget = repository.findByCodePair("USD", to);
 
         if (usdToBase.isPresent() && usdToTarget.isPresent()) {
-            BigDecimal rate = usdToTarget.get().rate().divide(usdToBase.get().rate(), 6, RoundingMode.HALF_EVEN);
-            return Optional.of(new ExchangeRate(usdToBase.get().targetCurrency(), usdToTarget.get().targetCurrency(), rate));
+            BigDecimal rate = usdToTarget.get().getRate().divide(usdToBase.get().getRate(), 6, RoundingMode.HALF_EVEN);
+            return Optional.of(new ExchangeRate(usdToBase.get().getTargetCurrency(), usdToTarget.get().getTargetCurrency(), rate));
         }
         return Optional.empty();
     }

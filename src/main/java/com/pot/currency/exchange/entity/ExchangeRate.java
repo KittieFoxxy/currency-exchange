@@ -6,34 +6,34 @@ import java.util.Objects;
 public class ExchangeRate {
 
     private Long id;
-    private Currency base;
-    private Currency target;
+    private Currency baseCurrency;
+    private Currency targetCurrency;
     private BigDecimal rate;
 
-    public ExchangeRate(Long id, Currency base, Currency target, BigDecimal rate) {
+    public ExchangeRate(Long id, Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
         this.id = id;
-        this.base = base;
-        this.target = target;
+        this.baseCurrency = baseCurrency;
+        this.targetCurrency = targetCurrency;
         this.rate = rate;
     }
 
-    public ExchangeRate(Currency base, Currency target, BigDecimal rate) {
-        new ExchangeRate(null, base, target, rate);
+    public ExchangeRate(Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
+        this(null, baseCurrency, targetCurrency, rate);
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public Currency baseCurrency() {
-        return base;
+    public Currency getBaseCurrency() {
+        return baseCurrency;
     }
 
-    public Currency targetCurrency() {
-        return target;
+    public Currency getTargetCurrency() {
+        return targetCurrency;
     }
 
-    public BigDecimal rate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
@@ -46,14 +46,14 @@ public class ExchangeRate {
         if (o == null || getClass() != o.getClass()) return false;
 
         ExchangeRate that = (ExchangeRate) o;
-        return Objects.equals(id, that.id) && Objects.equals(base, that.base) && Objects.equals(target, that.target) && Objects.equals(rate, that.rate);
+        return Objects.equals(id, that.id) && Objects.equals(baseCurrency, that.baseCurrency) && Objects.equals(targetCurrency, that.targetCurrency) && Objects.equals(rate, that.rate);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hashCode(id);
-        result = 31 * result + Objects.hashCode(base);
-        result = 31 * result + Objects.hashCode(target);
+        result = 31 * result + Objects.hashCode(baseCurrency);
+        result = 31 * result + Objects.hashCode(targetCurrency);
         result = 31 * result + Objects.hashCode(rate);
         return result;
     }

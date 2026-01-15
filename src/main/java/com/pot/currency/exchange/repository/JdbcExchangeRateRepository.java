@@ -53,15 +53,15 @@ class JdbcExchangeRateRepository implements ExchangeRateRepository {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement statement = conn.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)
         ) {
-            statement.setLong(1, exchangeRate.baseCurrency().id());
-            statement.setLong(2, exchangeRate.targetCurrency().id());
-            statement.setBigDecimal(3, exchangeRate.rate());
+            statement.setLong(1, exchangeRate.getBaseCurrency().getId());
+            statement.setLong(2, exchangeRate.getTargetCurrency().getId());
+            statement.setBigDecimal(3, exchangeRate.getRate());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     Long id = resultSet.getLong(1);
-                    return Optional.of(new ExchangeRate(id, exchangeRate.baseCurrency(), exchangeRate.targetCurrency(), exchangeRate.rate()));
+                    return Optional.of(new ExchangeRate(id, exchangeRate.getBaseCurrency(), exchangeRate.getTargetCurrency(), exchangeRate.getRate()));
                 }
             }
         } catch (SQLException e) {
@@ -116,7 +116,7 @@ class JdbcExchangeRateRepository implements ExchangeRateRepository {
              PreparedStatement statement = conn.prepareStatement(UPDATE_RATE_SQL)
         ) {
             statement.setBigDecimal(1, rate);
-            statement.setLong(2, exchangeRate.get().id());
+            statement.setLong(2, exchangeRate.get().getId());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -124,9 +124,9 @@ class JdbcExchangeRateRepository implements ExchangeRateRepository {
             }
             ExchangeRate current = exchangeRate.get();
             return Optional.of(new ExchangeRate(
-                    current.id(),
-                    current.baseCurrency(),
-                    current.targetCurrency(),
+                    current.getId(),
+                    current.getBaseCurrency(),
+                    current.getTargetCurrency(),
                     rate
             ));
         } catch (SQLException e) {

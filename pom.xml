@@ -7,10 +7,11 @@
     <groupId>com.pot</groupId>
     <artifactId>currency-exchange</artifactId>
     <version>1.0</version>
+    <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -45,6 +46,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>currency-exchange</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

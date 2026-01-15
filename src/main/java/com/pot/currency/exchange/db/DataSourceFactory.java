@@ -20,7 +20,8 @@ public class DataSourceFactory {
             }
         }
         SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
-        sqLiteDataSource.setUrl("jdbc:sqlite:%s".formatted(path));
+//        sqLiteDataSource.setUrl("jdbc:sqlite:%s".formatted(path));
+        sqLiteDataSource.setUrl("jdbc:sqlite:/usr/local/tomcat/currency.db");
         return sqLiteDataSource;
     }
 }

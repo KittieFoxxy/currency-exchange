@@ -30,15 +30,15 @@ class JdbcCurrencyRepository implements CurrencyRepository {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement statement = conn.prepareStatement(SAVE_CURRENCY_SQL, Statement.RETURN_GENERATED_KEYS)
         ) {
-            statement.setString(1, currency.code().toUpperCase());
-            statement.setString(2, currency.name());
-            statement.setString(3, currency.sign());
+            statement.setString(1, currency.getCode().toUpperCase());
+            statement.setString(2, currency.getFullName());
+            statement.setString(3, currency.getSign());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     Long id = resultSet.getLong(1);
-                    return Optional.of(new Currency(id, currency.code(), currency.name(), currency.sign()));
+                    return Optional.of(new Currency(id, currency.getCode(), currency.getFullName(), currency.getSign()));
                 }
             }
         } catch (SQLException e) {

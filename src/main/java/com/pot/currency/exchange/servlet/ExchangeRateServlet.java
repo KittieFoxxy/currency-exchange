@@ -15,8 +15,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends HttpServlet {
@@ -43,7 +47,7 @@ public class ExchangeRateServlet extends HttpServlet {
             ExchangeRate rate = exchangeRateService.get(baseCurrencyCode, targetCurrencyCode);
             ExchangeRateResponse exchangeRateResponse = mapper.toResponse(rate);
 
-            ResponseUtil.sendResponse(resp, 200, exchangeRateResponse);
+            ResponseUtil.sendResponse(resp, HttpServletResponse.SC_OK, exchangeRateResponse);
         } catch (IllegalArgumentException e) {
             ResponseUtil.sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (ExchangeRateNotFoundException e) {
@@ -54,6 +58,14 @@ public class ExchangeRateServlet extends HttpServlet {
     }
 
     @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getMethod().equalsIgnoreCase("PATCH")) {
+            doPatch(req, resp);
+        } else {
+            super.service(req, resp);
+        }
+    }
+
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String pathInfo = req.getPathInfo();
@@ -62,20 +74,24 @@ public class ExchangeRateServlet extends HttpServlet {
             String baseCurrencyCode = codePair.substring(0, 3);
             String targetCurrencyCode = codePair.substring(3);
 
-            String rateParam = req.getParameter("rate");
-            BigDecimal rate = new BigDecimal(rateParam).setScale(6, RoundingMode.HALF_EVEN);
+            String body = req.getReader().lines().collect(Collectors.joining());
+            String rateParam = null;
+            if (body.startsWith("rate=")) {
+                rateParam = body.substring(5);
+            }
+            BigDecimal rate = new BigDecimal(Objects.requireNonNull(rateParam)).setScale(6, RoundingMode.HALF_EVEN);
             ValidationUtil.validateDecimal(rate);
 
             ExchangeRate updatedRate = exchangeRateService.updateRate(baseCurrencyCode, targetCurrencyCode, rate);
             ExchangeRateResponse exchangeRateResponse = mapper.toResponse(updatedRate);
 
-            ResponseUtil.sendResponse(resp, 200, exchangeRateResponse);
+            ResponseUtil.sendResponse(resp, HttpServletResponse.SC_OK, exchangeRateResponse);
         } catch (IllegalArgumentException e) {
             ResponseUtil.sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (ExchangeRateNotFoundException e) {
             ResponseUtil.sendError(resp, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            ResponseUtil.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            ResponseUtil.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Arrays.toString(e.getStackTrace()));
         }
     }
 }
