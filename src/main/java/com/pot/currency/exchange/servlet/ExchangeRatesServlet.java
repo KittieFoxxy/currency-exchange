@@ -45,9 +45,8 @@ public class ExchangeRatesServlet extends HttpServlet {
             List<ExchangeRateResponse> responseRates = mapper.toResponseList(rates);
             ResponseUtil.sendResponse(resp, HttpServletResponse.SC_OK, responseRates);
         } catch (Exception e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             String message = "Internal Server Error";
-            ResponseUtil.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+            ResponseUtil.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, Arrays.toString(e.getStackTrace()));
         }
     }
 
