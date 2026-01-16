@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/exchangeRates")
@@ -44,6 +45,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             List<ExchangeRateResponse> responseRates = mapper.toResponseList(rates);
             ResponseUtil.sendResponse(resp, HttpServletResponse.SC_OK, responseRates);
         } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
             String message = "Internal Server Error";
             ResponseUtil.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
         }
